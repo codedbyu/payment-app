@@ -4,15 +4,19 @@ var Stripe = StripeAPI(secret);
 var Future = Npm.require('fibers/future');
 
 Meteor.methods({
-  stripeCreateCustomer: function(token, email){
+  stripeCreateCustomer: function(token, email, name, plan){
     check(token, String);
     check(email, String);
+    check(name, String);
+    check(plan, String);
 
     var stripeCustomer = new Future();
 
     Stripe.customers.create({
       source: token,
-      email: email
+      email: email,
+      metadata: {'full_name' : name},
+      plan: plan
     }, function(error, customer){
       if (error){
         stripeCustomer.return(error);
@@ -20,11 +24,11 @@ Meteor.methods({
         stripeCustomer.return(customer);
       }
     });
-
     return stripeCustomer.wait();
-  },
-
-  stripeCreateSubscription: function(customer, plan){
+  }
+  
+  //didn't use
+  /*stripeCreateSubscription: function(customer, plan){
     check(customer, String);
     check(plan, String);
 
@@ -41,5 +45,5 @@ Meteor.methods({
     });
 
     return stripeSubscription.wait();
-  }
+  }*/
 });
