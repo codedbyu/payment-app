@@ -19,7 +19,7 @@ Meteor.methods({
       var newCustomer = new Future();
 
       // Create our customer.
-      Meteor.call('stripeCreateCustomer', customer.token, customer.emailAddress, function(error, stripeCustomer){
+      Meteor.call('stripeCreateCustomer', customer.token, customer.emailAddress, customer.name, customer.plan, function(error, stripeCustomer){
         if (error) {
           console.log(error);
         } else {
